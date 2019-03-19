@@ -4,6 +4,8 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv').load();
 const nodemailer = require('nodemailer');
+require('dotenv').config();
+const pw = process.env.PW;
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -13,7 +15,7 @@ app.use(express.static('client'));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/client/black.html`);
+  res.sendFile(`${__dirname}/client/index.html`);
 });
 
 app.post('/contact', function(req, res) {
@@ -24,13 +26,13 @@ app.post('/contact', function(req, res) {
     secure: true,
     auth: {
       user: 'emaildummytest123@gmail.com',
-      pass: 'hobbes!23'
+      pass: pw
     }
   });
   mailOpts = {
     from: req.body.email,
     to: 'emaildummytest123@gmail.com',
-    subject: 'daybreaker',
+    subject: 'GrowCoat',
     text: `${req.body.email}`
   };
   smtpTrans.sendMail(mailOpts, function(error, response) {
@@ -39,7 +41,8 @@ app.post('/contact', function(req, res) {
       res.json({ success: false });
     } else {
       console.log('true');
-      res.json(200, { success: true });
+      // res.json(200, { success: true });
+      res.redirect('/');
     }
   });
 });
